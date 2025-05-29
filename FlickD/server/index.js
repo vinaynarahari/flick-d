@@ -14,28 +14,32 @@ app.use((req, res, next) => {
   next();
 });
 
-const uri = "mongodb://test_user:testuser__1@atlas-sql-6837491fb7eddf3deab780ea-druplg.a.query.mongodb.net:27017/sample_mflix?ssl=true&authSource=admin";
+const uri = "mongodb+srv://test_user:mypassword1@cluster0.ddewxiq.mongodb.net/flickD?retryWrites=true&w=majority&appName=Cluster0";
 const client = new MongoClient(uri);
 
 let usersCollection;
 
 async function connectDB() {
   await client.connect();
-  const db = client.db('sample_mflix');
+  const db = client.db('flickD');
   usersCollection = db.collection('users');
+  // Removed createIndex for compatibility
 }
 connectDB();
 
 // Signup endpoint
 app.post('/api/signup', async (req, res) => {
   console.log('Signup endpoint hit');
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Name, email, and password are required' });
+  }
   const existingUser = await usersCollection.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ error: 'User already exists' });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  await usersCollection.insertOne({ email, password: hashedPassword });
+  await usersCollection.insertOne({ name, email, password: hashedPassword });
   res.json({ message: 'User created' });
 });
 
@@ -51,11 +55,11 @@ app.post('/api/login', async (req, res) => {
     return res.status(400).json({ error: 'Invalid credentials' });
   }
   // Generate JWT token
-  const token = jwt.sign({ email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+  const token = jwt.sign({ email: user.email, name: user.name }, 'your_jwt_secret', { expiresIn: '1h' });
   res.json({ token });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 }); 

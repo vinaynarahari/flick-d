@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-
-const API_URL = 'http://10.0.0.177:3000/api';
+import { API_URL } from '@env';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -20,9 +19,8 @@ export default function LoginScreen() {
       });
       const data = await response.json();
       if (response.ok) {
-        // Save token to async storage or context here
         Alert.alert('Login successful!');
-        // TODO: Navigate to main app or home screen
+        router.push('/homepage');
       } else {
         Alert.alert('Login failed', data.error || 'Unknown error');
       }
