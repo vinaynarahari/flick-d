@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 
-const API_URL = process.env.API_URL;
+const API_URL = Constants.expoConfig?.extra?.API_URL || 'http://10.0.0.177:4000/api';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
@@ -14,6 +15,7 @@ export default function SignupScreen() {
   const handleSignup = async () => {
     setLoading(true);
     try {
+      console.log("Attempting signup with API URL:", API_URL);
       const response = await fetch(`${API_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -27,6 +29,7 @@ export default function SignupScreen() {
         Alert.alert('Signup failed', data.error || 'Unknown error');
       }
     } catch (error: any) {
+      console.error('Signup error:', error);
       Alert.alert('Signup failed', error.message);
     } finally {
       setLoading(false);
