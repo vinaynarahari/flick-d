@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { API_URL } from '@env';
+import Constants from 'expo-constants';
+
+const API_URL = Constants.expoConfig?.extra?.API_URL;
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -12,6 +14,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     setLoading(true);
     try {
+      console.log("API_URL:", API_URL);
       const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

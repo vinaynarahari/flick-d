@@ -1,6 +1,6 @@
 import 'react-native-get-random-values';
 
-const API_URL = 'http://10.0.0.177:3000/api';
+const API_URL = 'http://10.0.0.177:4000/api';
 
 // Example API functions
 export const createUser = async (userData: { email: string; name: string }) => {

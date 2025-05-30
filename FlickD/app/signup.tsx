@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { API_URL } from '@env';
+
+const API_URL = process.env.API_URL;
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
